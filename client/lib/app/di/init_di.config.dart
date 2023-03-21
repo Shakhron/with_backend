@@ -5,6 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:client/app/data/dio_container.dart' as _i5;
 import 'package:client/app/data/main_app_config.dart' as _i4;
 import 'package:client/app/domain/app_config.dart' as _i3;
 import 'package:get_it/get_it.dart' as _i1;
@@ -39,6 +40,7 @@ extension GetItInjectableX on _i1.GetIt {
       _i4.TestAppConfig(),
       registerFor: {_test},
     );
+    gh.singleton<_i5.DioContainer>(_i5.DioContainer(gh<_i3.AppConfig>()));
     return this;
   }
 }
