@@ -5,7 +5,7 @@ abstract class AuthRepository {
     required String email,
   });
 
-  Future<dynamic> signUn({
+  Future<dynamic> signIn({
     required String password,
     required String username,
   });

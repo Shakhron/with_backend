@@ -1,4 +1,8 @@
+import 'package:client/app/presantation/components/app_text_button.dart';
+import 'package:client/app/presantation/components/app_text_field.dart';
+import 'package:client/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -21,35 +25,33 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  validator: emptyValodator,
-                  maxLength: 1,
+                AppTextField(
                   controller: controllerLogin,
-                  decoration: const InputDecoration(
-                    labelText: "Логин",
-                    border: OutlineInputBorder(),
-                  ),
+                  labelText: "Логин",
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  validator: emptyValodator,
-                  maxLength: 1,
+                AppTextField(
                   controller: controllerPassword,
-                  decoration: const InputDecoration(
-                    labelText: "Пароль",
-                    border: OutlineInputBorder(),
-                  ),
+                  labelText: "Пароль",
+                  obscureText: true,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
+                AppTExtButton(
+                  onPressed: () {
+                    if (globalKey.currentState?.validate() == true) {
+                      _onTapToSignIn(context.read<AuthCubit>());
+                    }
+                  },
+                  text: "Войти",
+                ),
+                const SizedBox(height: 16),
+                AppTExtButton(
                   onPressed: () {
                     if (globalKey.currentState?.validate() == true) {}
                   },
-                  style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all<Size>(
-                          const Size(double.maxFinite, 40))),
-                  child: const Text("Войти"),
-                )
+                  backgroundColor: Colors.grey,
+                  text: "Регистрация",
+                ),
               ],
             ),
           ),
@@ -58,10 +60,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  String? emptyValodator(String? value) {
-    if (value!.isEmpty) {
-      return "Обязательное полу";
-    }
-    return null;
-  }
+  void _onTapToSignIn(AuthCubit authCubit) => authCubit.signIn(
+      username: controllerLogin.text, password: controllerPassword.text);
 }
