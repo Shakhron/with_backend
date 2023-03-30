@@ -37,7 +37,11 @@ class MockAuthRepository implements AuthRepository {
       required String username,
       required String email}) {
     return Future.delayed(const Duration(seconds: 2), () {
-      return UserEntity(email: email, username: username, id: "-1");
+      return UserEntity(
+        email: email,
+        username: username,
+        id: "-1",
+      );
     });
   }
 
