@@ -28,9 +28,7 @@ class _GlobalProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthCubit(locator<AuthRepository>()))
-      ],
+      providers: [BlocProvider(create: (context) => locator.get<AuthCubit>())],
       child: child,
     );
   }

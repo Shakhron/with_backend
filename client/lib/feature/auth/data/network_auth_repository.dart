@@ -4,16 +4,19 @@ import 'package:client/feature/auth/domain/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepository)
-@prod
 class NetworkAuthRepository implements AuthRepository {
   final DioContainer dioContainer;
 
   NetworkAuthRepository(this.dioContainer);
 
   @override
-  Future getProfile() {
-    // TODO: implement getProfile
-    throw UnimplementedError();
+  Future getProfile() async {
+    try {
+      final response = await dioContainer.dio.get("/auth/user/");
+      return UserDto.fromJson(response.data["data"]).toEntity();
+    } catch (_) {
+      rethrow;
+    }
   }
 
   @override
@@ -24,9 +27,13 @@ class NetworkAuthRepository implements AuthRepository {
   }
 
   @override
-  Future refreshToken({required String refreshToken}) {
-    // TODO: implement refreshToken
-    throw UnimplementedError();
+  Future refreshToken({String? refreshToken}) async {
+    try {
+      final response = await dioContainer.dio.post("/auth/token/$refreshToken");
+      return UserDto.fromJson(response.data["data"]).toEntity();
+    } catch (_) {
+      rethrow;
+    }
   }
 
   @override

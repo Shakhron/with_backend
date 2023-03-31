@@ -1,6 +1,8 @@
 import 'package:client/app/domain/app_config.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @Singleton()
 class DioContainer {
@@ -12,6 +14,7 @@ class DioContainer {
       connectTimeout: const Duration(seconds: 15000),
     );
     dio = Dio(options);
+    if (kDebugMode) addInterceptor(PrettyDioLogger());
   }
 
   void addInterceptor(Interceptor interceptor) {
