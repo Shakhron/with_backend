@@ -1,18 +1,19 @@
-import 'package:client/app/data/dio_container.dart';
+import 'package:client/app/domain/app_api.dart';
 import 'package:client/feature/auth/data/dto/user_dto.dart';
 import 'package:client/feature/auth/domain/auth_repository.dart';
+import 'package:client/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepository)
 class NetworkAuthRepository implements AuthRepository {
-  final DioContainer dioContainer;
+  final AppApi api;
 
-  NetworkAuthRepository(this.dioContainer);
+  NetworkAuthRepository(this.api);
 
   @override
-  Future getProfile() async {
+  Future<UserEntity> getProfile() async {
     try {
-      final response = await dioContainer.dio.get("/auth/user/");
+      final response = await api.getProfile();
       return UserDto.fromJson(response.data["data"]).toEntity();
     } catch (_) {
       rethrow;
@@ -27,9 +28,9 @@ class NetworkAuthRepository implements AuthRepository {
   }
 
   @override
-  Future refreshToken({String? refreshToken}) async {
+  Future<UserEntity> refreshToken({String? refreshToken}) async {
     try {
-      final response = await dioContainer.dio.post("/auth/token/$refreshToken");
+      final response = await api.refreshToken();
       return UserDto.fromJson(response.data["data"]).toEntity();
     } catch (_) {
       rethrow;
@@ -37,12 +38,10 @@ class NetworkAuthRepository implements AuthRepository {
   }
 
   @override
-  Future signIn({required String password, required String username}) async {
+  Future<UserEntity> signIn(
+      {required String password, required String username}) async {
     try {
-      final response = await dioContainer.dio.post(
-        "/auth/token",
-        data: {"username": username, "password": password},
-      );
+      final response = await api.signIn(password: password, username: username);
       return UserDto.fromJson(response.data["data"]).toEntity();
     } catch (_) {
       rethrow;
@@ -50,20 +49,14 @@ class NetworkAuthRepository implements AuthRepository {
   }
 
   @override
-  Future signUp({
+  Future<UserEntity> signUp({
     required String password,
     required String username,
     required String email,
   }) async {
     try {
-      final response = await dioContainer.dio.put(
-        "/auth/token",
-        data: {
-          "username": username,
-          "password": password,
-          "email": email,
-        },
-      );
+      final response = await api.signUp(
+          password: password, username: username, email: email);
       return UserDto.fromJson(response.data["data"]).toEntity();
     } catch (_) {
       rethrow;
